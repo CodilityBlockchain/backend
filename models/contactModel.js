@@ -8,7 +8,7 @@ const contactSchema = mongoose.Schema({
         type : String,
         required : [true,"Please add the contact email"]
     },
-    phoneNo:{
+    phone:{
         type : String,
         required : [true,"Please add the contact phone"]
     }
