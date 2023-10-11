@@ -5,21 +5,26 @@ const router = express.Router();
 // get all contacts
 // Get  /contacts
 // public
-const getContact = asyncHander((req,res) => {
-    const contacts = Contact.find();
+const getContact = asyncHander(async(req,res) => {
+    const contacts = await Contact.find();
     res.status(200).json(contacts);
 });
 // create new contact
 // post /contacts
 // public 
-const createContact = asyncHander((req,res) => {
+const createContact = asyncHander(async (req,res) => {
     console.log("the request is ",req.body);
     const {name,email,phone } = req.body;
     if(!name || !email || !phone) {
         res.status(400);
         throw new Error("all fields are mandatory");
     }
-    res.status(200).json({message:"create new Contacts"});
+    const contact = await Contact.create({
+        name,
+        email,
+        phone,
+    });
+    res.status(200).json(contact);
 });
 // update contact
 // put /contacts/id
