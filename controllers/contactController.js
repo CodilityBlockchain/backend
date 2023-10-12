@@ -5,7 +5,7 @@ const router = express.Router();
 // get all contacts
 // Get  /contacts
 // public
-const getContact = asyncHander(async(req,res) => {
+const getContact = asyncHander(async(req,res) => { 
     const contacts = await Contact.find();
     res.status(200).json(contacts);
 });
@@ -29,20 +29,41 @@ const createContact = asyncHander(async (req,res) => {
 // update contact
 // put /contacts/id
 // public
-const updateContact = asyncHander((req,res) => {
-    res.status(200).json({message:`update Contacts ${req.params.id}`});
+const updateContact = asyncHander(async(req,res) => {
+    const contact = await Contact.findById(req.params.id);
+    if(!contact){
+        res.status(404);
+        throw new error("contact not found");
+    }
+    const updateContact = await Contact.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {new : true}
+    )
+    res.status(200).json(updateContact);
 });
 // delete contact 
 // delete /contacts/id
 // public
-const deleteContact = asyncHander((req,res) => {
-    res.status(200).json({message:`delete Contacts ${req.params.id}`});
+const deleteContact = asyncHander(async(req,res) => {
+    const contact = await Contact.findById(req.params.id);
+    if(!contact){
+        res.status(404);
+        throw new error("contact not found");
+    }
+    await Contact.remove();
+    res.status(200).json(contact);
 });
 // get contact
 // get /contacts/id
 // public
-const getSingleContacts = asyncHander((req,res) => {
-    res.status(200).json({message:`get single Contacts ${req.params.id}`});
+const getSingleContacts = asyncHander(async(req,res) => {
+    const contact = await Contact.findById(req.params.id);
+    if(!contact){
+        res.status(404);
+        throw new error("contact not found");
+    }
+    res.status(200).json(contact);
 });
 module.exports = {getContact,createContact,updateContact,deleteContact,getSingleContacts
 };
